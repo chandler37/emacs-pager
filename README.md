@@ -1,5 +1,7 @@
 # emacs-pager.el
 
+[THIS IS A FORK. YOU PROBABLY WANT THE REAL DEAL. -chandler37]
+
 I use emacs `shell-mode` buffers almost exclusively, which usually
 works great, except for when something wants to page. Things like
 `less` dont really work that great in `shell-mode`, and in general I
@@ -45,12 +47,12 @@ In your `.bashrc` or `.zshrc` file, put something like this
 
     if [ $INSIDE_EMACS ]; then
         export PAGER="emacs-pipe"
-    elif [ -x "`which less`" ]; then
-        export PAGER="`which less`"
+    elif [ -x /usr/bin/less -a "$TERM" != "dumb" ]; then
+        export PAGER="/usr/bin/less"
         export LESS="-isR"
         alias lv="less"
     else
-        export PAGER="/bin/more"
+        export PAGER="cat"
     fi
 
 Put `emacs-pager.el` somewhere on your load-path, and require it. Or,
@@ -63,7 +65,7 @@ Personally, I use (and love) quelpa, here is what I have in my configs
 
 Somewhere in your emacs init files, add the following line
 
-    (add-to-list 'auto-mode-alist '("\\.emacs-pager$" . emacs-pager-mode))
+    (add-to-list 'auto-mode-alist '("emacs-pager\\..*$" . emacs-pager-mode))
 
 ### Usage
 
