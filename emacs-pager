@@ -1,17 +1,11 @@
-#!/usr/bin/env ruby
-
-require 'digest/md5'
-require 'fileutils'
-
-input = ARGF.read
-file = "/tmp/#{Digest::MD5.hexdigest input}.emacs-pager"
-
-File.open(file, 'w') do |f|
-  f.write(input)
-end
-
-puts 'reading into emacs...'
-
-`emacsclient #{file}`
-
-FileUtils.rm(file)
+#!/bin/bash
+t=$(mktemp -t emacs-pager.XXXXXXXXXXXXXX) || exit 1
+cat - >> "$t"
+echo 'reading into emacs...'
+if test -x /Applications/Aquamacs.app/Contents/MacOS/bin/emacsclient; then
+    export EDITOR="/Applications/Aquamacs.app/Contents/MacOS/bin/emacsclient"
+else
+    export EDITOR="/usr/bin/emacsclient"
+fi
+"$EDITOR" "$t"
+rm -f -- "$t"
